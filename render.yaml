@@ -1,0 +1,50 @@
+services:
+  - type: web
+    name: telegram-productivity-hub
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: APP_NAME
+        value: Telegram Productivity Hub
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: telegram-productivity-hub-db
+          property: connectionString
+      - key: BOT_TOKEN
+        sync: false
+      - key: ADMIN_IDS
+        sync: false
+      - key: FORCED_CHANNEL
+        sync: false
+      - key: FREE_DAILY_CONVERSIONS
+        value: 10
+      - key: REFERRAL_REWARD_CONVERSIONS
+        value: 3
+      - key: REFERRAL_REWARD_PREMIUM_DAYS
+        value: 0
+      - key: STORAGE_DIR
+        value: /tmp/storage
+      - key: AI_PROVIDER
+        value: groq
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
+      - key: GROQ_BASE_URL
+        value: https://api.groq.com/openai/v1
+      - key: WEBHOOK_BASE_URL
+        sync: false
+      - key: TELEGRAM_WEBHOOK_SECRET
+        generateValue: true
+
+databases:
+  - name: telegram-productivity-hub-db
+    plan: free
+    databaseName: hub
+    user: hub
+
