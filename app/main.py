@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 from aiogram import Bot
 from aiogram.types import Update
-from fastapi import Depends, FastAPI, Header, HTTPException, Request
+from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response
 from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
@@ -74,6 +74,21 @@ async def shutdown() -> None:
 @app.get("/health")
 def health() -> dict:
     return {"ok": True, "time": datetime.now(timezone.utc).isoformat()}
+
+
+@app.head("/health")
+def health_head() -> Response:
+    return Response(status_code=200)
+
+
+@app.get("/")
+def root() -> dict:
+    return {"ok": True, "service": get_settings().app_name}
+
+
+@app.head("/")
+def root_head() -> Response:
+    return Response(status_code=200)
 
 
 @app.post("/telegram/webhook")

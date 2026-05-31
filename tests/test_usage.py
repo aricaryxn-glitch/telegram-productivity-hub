@@ -3,6 +3,7 @@ from datetime import date, datetime, timedelta, timezone
 from app.services.referrals import make_referral_code, make_referral_link
 from app.services.usage import can_claim_daily, decide_usage
 from app.config import Settings
+from app.main import app
 
 
 def test_free_usage_allows_until_limit():
@@ -54,3 +55,13 @@ def test_webhook_secret_is_telegram_safe():
 
     safe = Settings(telegram_webhook_secret="abc_DEF-123")
     assert safe.telegram_safe_webhook_secret == "abc_DEF-123"
+
+
+def test_health_supports_monitor_head_requests():
+    from fastapi.testclient import TestClient
+
+    client = TestClient(app)
+    assert client.get("/health").status_code == 200
+    assert client.head("/health").status_code == 200
+    assert client.get("/").status_code == 200
+    assert client.head("/").status_code == 200
