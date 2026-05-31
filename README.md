@@ -107,7 +107,7 @@ Add the same environment variables from `.env.example` in the hosting dashboard.
 
 ### Render
 
-This repo includes `render.yaml` for a single free Render web service plus free Postgres. The Telegram bot runs through FastAPI webhooks at `/telegram/webhook`, so no separate background worker is required.
+This repo includes `render.yaml` for a single free Render Docker web service plus free Postgres. The Telegram bot runs through FastAPI webhooks at `/telegram/webhook`, so no separate background worker is required.
 
 Required Render environment variables:
 
@@ -125,6 +125,8 @@ Free monitoring:
 - Create a free UptimeRobot HTTP monitor for `https://your-render-service.onrender.com/health`
 - Use the 5-minute interval
 - See `monitoring/uptimerobot.md`
+
+For click-by-click setup, see `RENDER_DEPLOY_GUIDE.md`.
 
 ## API Endpoints
 
