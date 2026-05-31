@@ -116,10 +116,9 @@ BOT_TOKEN=your_botfather_token
 ADMIN_IDS=@your_admin_username_or_numeric_id
 FORCED_CHANNEL=@YourChannel
 GROQ_API_KEY=your_groq_key
-WEBHOOK_BASE_URL=https://your-render-service.onrender.com
 ```
 
-After the first deploy, set `WEBHOOK_BASE_URL` to the real Render URL, then redeploy or restart the service so Telegram receives the webhook URL.
+On Render, the app automatically uses Render's `RENDER_EXTERNAL_URL` to configure the Telegram webhook. Set `WEBHOOK_BASE_URL` only if you later use a custom domain.
 
 Free monitoring:
 

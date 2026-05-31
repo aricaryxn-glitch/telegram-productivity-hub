@@ -37,8 +37,6 @@ services:
         value: llama-3.3-70b-versatile
       - key: GROQ_BASE_URL
         value: https://api.groq.com/openai/v1
-      - key: WEBHOOK_BASE_URL
-        sync: false
       - key: TELEGRAM_WEBHOOK_SECRET
         generateValue: true
 
@@ -47,4 +45,3 @@ databases:
     plan: free
     databaseName: hub
     user: hub
-

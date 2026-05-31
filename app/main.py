@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timezone
 
 from aiogram import Bot
@@ -46,10 +47,11 @@ class UserModerationIn(BaseModel):
 async def startup() -> None:
     init_db()
     settings = get_settings()
-    if settings.bot_token and settings.webhook_base_url:
+    webhook_base_url = settings.webhook_base_url or os.getenv("RENDER_EXTERNAL_URL", "")
+    if settings.bot_token and webhook_base_url:
         bot = Bot(settings.bot_token)
         dispatcher = create_dispatcher()
-        webhook_url = f"{settings.webhook_base_url.rstrip('/')}/telegram/webhook"
+        webhook_url = f"{webhook_base_url.rstrip('/')}/telegram/webhook"
         await configure_bot(bot)
         await bot.set_webhook(
             webhook_url,
