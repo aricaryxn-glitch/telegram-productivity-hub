@@ -1,5 +1,7 @@
 from functools import lru_cache
+import hashlib
 from pathlib import Path
+import re
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -64,6 +66,15 @@ class Settings(BaseSettings):
         if username and username.lower() in self.admin_username_set:
             return True
         return False
+
+    @property
+    def telegram_safe_webhook_secret(self) -> str:
+        value = self.telegram_webhook_secret.strip()
+        if not value:
+            return ""
+        if re.fullmatch(r"[A-Za-z0-9_-]{1,256}", value):
+            return value
+        return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
 @lru_cache

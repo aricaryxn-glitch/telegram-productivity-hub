@@ -2,6 +2,7 @@ from datetime import date, datetime, timedelta, timezone
 
 from app.services.referrals import make_referral_code, make_referral_link
 from app.services.usage import can_claim_daily, decide_usage
+from app.config import Settings
 
 
 def test_free_usage_allows_until_limit():
@@ -44,3 +45,12 @@ def test_referral_link_shape():
     code = make_referral_code()
     assert len(code) == 10
     assert make_referral_link("YourBot", code) == f"https://t.me/YourBot?start={code}"
+
+
+def test_webhook_secret_is_telegram_safe():
+    settings = Settings(telegram_webhook_secret="abc+/=bad")
+    assert settings.telegram_safe_webhook_secret.isalnum()
+    assert len(settings.telegram_safe_webhook_secret) == 64
+
+    safe = Settings(telegram_webhook_secret="abc_DEF-123")
+    assert safe.telegram_safe_webhook_secret == "abc_DEF-123"

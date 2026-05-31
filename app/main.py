@@ -52,10 +52,11 @@ async def startup() -> None:
         bot = Bot(settings.bot_token)
         dispatcher = create_dispatcher()
         webhook_url = f"{webhook_base_url.rstrip('/')}/telegram/webhook"
+        webhook_secret = settings.telegram_safe_webhook_secret
         await configure_bot(bot)
         await bot.set_webhook(
             webhook_url,
-            secret_token=settings.telegram_webhook_secret or None,
+            secret_token=webhook_secret or None,
             drop_pending_updates=False,
         )
         app.state.telegram_bot = bot
@@ -81,7 +82,8 @@ async def telegram_webhook(
     x_telegram_bot_api_secret_token: str | None = Header(default=None),
 ) -> dict:
     settings = get_settings()
-    if settings.telegram_webhook_secret and x_telegram_bot_api_secret_token != settings.telegram_webhook_secret:
+    webhook_secret = settings.telegram_safe_webhook_secret
+    if webhook_secret and x_telegram_bot_api_secret_token != webhook_secret:
         raise HTTPException(status_code=403, detail="Invalid webhook secret")
     bot = getattr(app.state, "telegram_bot", None)
     dispatcher = getattr(app.state, "telegram_dispatcher", None)
